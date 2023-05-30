@@ -1,11 +1,12 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { fetchReviewsMovies } from 'components/moviesService';
+import { fetchReviewsMovies } from 'moviesService';
 
 const Reviews = () => {
   const { movieId } = useParams();
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchReviews(movieId);
@@ -18,7 +19,7 @@ const Reviews = () => {
 
       setMovies(data);
     } catch (error) {
-      console.log(error);
+      setError(error);
     } finally {
       setIsLoading(false);
     }
@@ -27,6 +28,7 @@ const Reviews = () => {
   return (
     <>
       {isLoading && 'Loading ...'}
+      {error && <p>An error occurred. Please try again.</p>}
       <ul>
         {movies &&
           movies.map(({ id, author, content }) => (

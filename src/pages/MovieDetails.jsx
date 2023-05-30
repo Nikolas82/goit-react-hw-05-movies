@@ -2,13 +2,14 @@ import { useParams, Outlet, useLocation, Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { fetchDetailsMovies } from 'components/moviesService';
+import { fetchDetailsMovies } from 'moviesService';
 
 const MovieDetails = () => {
   const { movieId } = useParams();
 
   const [movie, setMovie] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const location = useLocation();
   const backLocation = useRef(location.state?.from ?? '/');
@@ -24,7 +25,7 @@ const MovieDetails = () => {
 
       setMovie(data);
     } catch (error) {
-      console.log(error);
+      setError(error);
     } finally {
       setIsLoading(false);
     }
@@ -41,7 +42,6 @@ const MovieDetails = () => {
   return (
     <>
       <button>
-        {' '}
         <Link to={backLocation.current}>Back</Link>
       </button>
 
@@ -52,6 +52,7 @@ const MovieDetails = () => {
         }}
       >
         {isLoading && 'Loading ...'}
+        {error && <p>An error occurred. Please try again.</p>}
 
         {movie && (
           <>

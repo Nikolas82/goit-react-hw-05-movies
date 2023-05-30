@@ -1,14 +1,13 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
 
+import MoviesList from 'components/moviesList/MoviesList';
 import { fetchTrendingMovies } from '../moviesService';
 
 const Home = () => {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  const location = useLocation();
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchMovies();
@@ -21,7 +20,7 @@ const Home = () => {
 
       setMovies(data);
     } catch (error) {
-      console.log(error);
+      setError(error);
     } finally {
       setIsLoading(false);
     }
@@ -30,16 +29,9 @@ const Home = () => {
   return (
     <>
       {isLoading && 'Loading ...'}
+      {error && <p>An error occurred. Please try again.</p>}
       <h1>Trending today</h1>
-      <ul>
-        {movies.map(movie => (
-          <li key={movie.id}>
-            <Link to={`/movies/${movie.id}`} state={{ from: location }}>
-              {movie.original_title}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      {movies && <MoviesList movies={movies} />}
     </>
   );
 };

@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams, Link, useLocation } from 'react-router-dom';
-
-import { searchMovies } from 'components/moviesService';
+import { useSearchParams } from 'react-router-dom';
+import MoviesList from 'components/moviesList/MoviesList';
+import { searchMovies } from 'moviesService';
 
 const Movies = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [movies, setMovies] = useState();
   const [isLoading, setIsLoading] = useState(false);
-
-  const location = useLocation();
+  const [error, setError] = useState(null);
 
   const searchQuery = searchParams.get('query');
 
@@ -32,7 +31,7 @@ const Movies = () => {
 
       setMovies(data);
     } catch (error) {
-      console.log(error);
+      setError(error);
     } finally {
       setIsLoading(false);
     }
@@ -51,16 +50,8 @@ const Movies = () => {
       </form>
 
       {isLoading && 'Loading ...'}
-      <ul>
-        {movies &&
-          movies.map(movie => (
-            <li key={movie.id}>
-              <Link to={`/movies/${movie.id}`} state={{ from: location }}>
-                {movie.original_title}
-              </Link>
-            </li>
-          ))}
-      </ul>
+      {error && <p>An error occurred. Please try again.</p>}
+      {movies && <MoviesList movies={movies} />}
     </div>
   );
 };
