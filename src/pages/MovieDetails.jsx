@@ -1,7 +1,7 @@
 import { useParams, Outlet, useLocation, Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-
+import defaultImage from '../components/image/image.png';
 import { fetchDetailsMovies } from 'moviesService';
 
 const MovieDetails = () => {
@@ -59,7 +59,7 @@ const MovieDetails = () => {
             <div>
               <img
                 src={`https://image.tmdb.org/t/p/w200/${movie.poster_path}`}
-                alt=""
+                alt={ defaultImage}
               />
             </div>
             <div>
